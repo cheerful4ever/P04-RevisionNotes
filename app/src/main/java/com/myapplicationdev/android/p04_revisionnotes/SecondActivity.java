@@ -11,6 +11,7 @@ public class SecondActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		//TODO implement the Custom ListView
 
+
 	}
 
 

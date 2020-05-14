@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 // Insert a task
                 db.insertNote(editNote.getText().toString(), value);
                 db.close();
+
+                editNote.setText("");
+                Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_LONG).show();
             }
         });
 

@@ -1,24 +1,55 @@
 package com.myapplicationdev.android.p04_revisionnotes;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static java.lang.Integer.parseInt;
+
 public class MainActivity extends AppCompatActivity {
+
+    Button buttonInsert, buttonShowList;
+    EditText editNote;
+    RadioGroup radioGroupStars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        public void onClick(View view) {
-            DBHelper dbHelper = new DBHelper(MainActivity.this);
+        buttonInsert = findViewById(R.id.buttonInsertNote);
+        buttonShowList = findViewById(R.id.buttonShowList);
+        editNote = findViewById(R.id.editTextNote);
+        radioGroupStars = findViewById(R.id.radioGroupStars);
 
-            dbHelper.insertNote("Revision #1", 4);
-            dbHelper.insertNote("Record #2", 5);
+        buttonInsert.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // Create the DBHelper object, passing in the
+                // activity's Context
+                DBHelper db = new DBHelper(MainActivity.this);
+                int selectedId = radioGroupStars.getCheckedRadioButtonId();
+                RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                int value = parseInt(radioButton.getText().toString());
+                // Insert a task
+                db.insertNote(editNote.getText().toString(), value);
+                db.close();
+            }
+        });
 
-            dbHelper.close();
-        }
+        buttonShowList.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }

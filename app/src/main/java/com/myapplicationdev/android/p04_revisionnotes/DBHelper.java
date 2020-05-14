@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String TABLE_NOTE = "note";
 	private static final String COLUMN_ID = "_id";
 	private static final String COLUMN_NOTE_CONTENT = "noteContent";
-	private static final String COLUMN_STARS = "date";
+	private static final String COLUMN_STARS = "stars";
 
 
 	public DBHelper(Context context) {
@@ -28,7 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		//TODO CREATE TABLE Note
-		String createNoteTableSql = "CREATE TABLE" + TABLE_NOTE + "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NOTE_CONTENT + " TEXT, " + COLUMN_STARS + " INTEGER)";
+		String createNoteTableSql = "CREATE TABLE " + TABLE_NOTE + "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NOTE_CONTENT + " TEXT, " + COLUMN_STARS + " INTEGER)";
 		 db.execSQL(createNoteTableSql);
 
 	}
@@ -53,28 +53,26 @@ public class DBHelper extends SQLiteOpenHelper {
 
 	public ArrayList<Note> getAllNotes() {
 		//TODO return records in Java objects
-		final ArrayList<Note> notes = new ArrayList<Note>() {
-			String selectQuery = "SELECT " + COLUMN_ID + "," + COLUMN_NOTE_CONTENT + "," + COLUMN_STARS + " FROM " + TABLE_NOTE;
+		ArrayList<Note> notes = new ArrayList<Note>();
+		String selectQuery = "SELECT " + COLUMN_ID + "," +
+				COLUMN_NOTE_CONTENT + "," + COLUMN_STARS + " FROM "
+				+ TABLE_NOTE;
 
-			SQLiteDatabase db = this.getReadableDatabase();
-			Cursor cursor = db.rawQuery(selectQuery, null);
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		if (cursor.moveToFirst()) {
+			do {
+				int id = cursor.getInt(0);
+				String title = cursor.getString(1);
+				int stars = cursor.getInt(2);
 
-			if(cursor.movetoFirst()) {
-				do{
-					int id = cursor.getInt(0);
-					String title = cursor.getString(1);
-					int Stars = cursor.getInt(2);
-
-					Note note = new Note(id, title, stars);
-					notes.add(note);
-				}
-				while (cursor.moveToNext());
-
-				cursor.close();
-				db.close();
-				return notes;
-			}
-		};
+				Note note = new Note(id, title, stars);
+				notes.add(note);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		db.close();
+		return notes;
 	}
 
     public ArrayList<String> getNoteContent() {
